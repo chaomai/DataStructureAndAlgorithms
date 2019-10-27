@@ -66,27 +66,34 @@
 // };
 
 // sort
+// class Solution {
+//    public:
+//     vector<vector<int>> merge(vector<vector<int>>& intervals) {
+//         vector<vector<int>> ret;
+
+//         if (intervals.size() == 0) {
+//             return ret;
+//         }
+
+//         sort(intervals.begin(), intervals.end(), [](vector<int>& a, vector<int> &b) {return a[0] < b[0];});
+//         ret.push_back(intervals[0]);
+//         for (int i = 1; i < intervals.size(); i++) {
+//             int j = ret.size() - 1;
+//             if (intervals[i][0] <= ret[j][1]) {
+//                 ret[j][1] = max(intervals[i][1], ret[j][1]);
+//             } else {
+//                 ret.push_back(intervals[i]);
+//             }
+//         }
+
+//         return ret;
+//     }
+// };
+
+// interval tree
 class Solution {
    public:
     vector<vector<int>> merge(vector<vector<int>>& intervals) {
-        vector<vector<int>> ret;
-
-        if (intervals.size() == 0) {
-            return ret;
-        }
-
-        sort(intervals.begin(), intervals.end(), [](vector<int>& a, vector<int> &b) {return a[0] < b[0];});
-        ret.push_back(intervals[0]);
-        for (int i = 1; i < intervals.size(); i++) {
-            int j = ret.size() - 1;
-            if (intervals[i][0] <= ret[j][1]) {
-                ret[j][1] = max(intervals[i][1], ret[j][1]);
-            } else {
-                ret.push_back(intervals[i]);
-            }
-        }
-
-        return ret;
     }
 };
 // @lc code=end
