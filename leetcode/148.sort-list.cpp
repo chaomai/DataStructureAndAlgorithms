@@ -40,10 +40,76 @@
  * };
  */
 class Solution {
-public:
+   public:
     ListNode* sortList(ListNode* head) {
-
+        ListNode* r_b = nullptr;
+        ListNode* r_e = nullptr;
+        quick_sort(head, &r_b, &r_e);
+        return r_b;
     }
 
+    void quick_sort(ListNode* head, ListNode** ret_b, ListNode** ret_e) {
+        if (head == nullptr) {
+            *ret_b = nullptr;
+            *ret_e = nullptr;
+            return;
+        }
+
+        if (head->next == nullptr) {
+            *ret_b = head;
+            *ret_e = head;
+            return;
+        }
+
+        ListNode* pivot = head;
+        ListNode* pi = pivot->next;
+        // <= pivot
+        ListNode* dummy_head1 = new ListNode(INT_MIN);
+        ListNode* di = dummy_head1;
+        // > pivot
+        ListNode* dummy_head2 = new ListNode(INT_MIN);
+        ListNode* dj = dummy_head2;
+
+        while (pi != nullptr) {
+            if (pi->val <= pivot->val) {
+                di->next = pi;
+                di = di->next;
+            } else {
+                dj->next = pi;
+                dj = dj->next;
+            }
+            pi = pi->next;
+        }
+
+        di->next = nullptr;
+        dj->next = nullptr;
+        di = dummy_head1->next;
+        dj = dummy_head2->next;
+        delete dummy_head1;
+        delete dummy_head2;
+
+        ListNode* ri_b = nullptr;
+        ListNode* ri_e = nullptr;
+        ListNode* rj_b = nullptr;
+        ListNode* rj_e = nullptr;
+        quick_sort(di, &ri_b, &ri_e);
+        quick_sort(dj, &rj_b, &rj_e);
+
+        // ri_e -> pivot -> rj_b
+        if (ri_b != nullptr) {
+            *ret_b = ri_b;
+            ri_e->next = pivot;
+            pivot->next = rj_b;
+        } else {
+            *ret_b = pivot;
+            pivot->next = rj_b;
+        }
+
+        if (rj_b != nullptr) {
+            *ret_e = rj_e;
+        } else {
+            *ret_e = pivot;
+        }
+    }
 };
 // @lc code=end
