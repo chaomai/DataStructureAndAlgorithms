@@ -158,48 +158,89 @@
 //     }
 // };
 
-// quick sort
+// quick sort1
+// class Solution {
+//    public:
+//     int findKthLargest(vector<int>& nums, int k) {
+//         quick_sort(nums, 0, nums.size());
+//         return nums[nums.size() - k];
+//     }
+
+//     // quick sort [b. e)
+//     void quick_sort(vector<int>& nums, int b, int e) {
+//         if (b >= e) {
+//             return;
+//         }
+
+//         // partition [b, e)
+//         // b: pivot
+//         // [b + 1, m): <= pivot
+//         // [m, e): > pivot
+//         int pivot = nums[b];
+//         int m = b + 1;
+//         for (int i = b + 1; i < e; i++) {
+//             if (nums[i] <= pivot) {
+//                 swap(nums[i], nums[m]);
+//                 m++;
+//             }
+//         }
+
+//         swap(nums[b], nums[m - 1]);
+
+//         // m - 1不再参与接下来的排序
+//         quick_sort(nums, b, m - 1);
+//         quick_sort(nums, m, e);
+//     }
+// };
+
+// quick sort2
 class Solution {
    public:
     int findKthLargest(vector<int>& nums, int k) {
         quick_sort(nums, 0, nums.size());
-
-        for (int i = 0; i < nums.size(); i++) {
-            printf("%d ", nums[i]);
-        }
         return nums[nums.size() - k];
     }
 
     // quick sort [b. e)
     void quick_sort(vector<int>& nums, int b, int e) {
-        if (e - b <= 1) {
+        if (b >= e) {
             return;
         }
 
+        // partition [b, e)
+        // b: pivot
+        // [b + 1, i): <= pivot
+        // (j, e): > pivot
         int pivot = nums[b];
-        int b1 = b + 1;
-        int e1 = e - 1;
-        bool find_b = false;
-        bool find_e = false;
-        while (b1 < e1) {
-            if (nums[b1] >= nums[pivot]) {
-                find_b = true;
-            } else {
-                b1++;
+        int i = b + 1;
+        int j = e - 1;
+        while (true) {
+            while (i < e) {
+                if (nums[i] > pivot) {
+                    break;
+                }
+                i++;
             }
 
-            if (nums[e1] <= nums[pivot]) {
-                find_e = true;
-            } else {
-                e1--;
+            while (j > b) {
+                if (nums[j] <= pivot) {
+                    break;
+                }
+                j--;
             }
 
-            if (find_b && find_e) {
-                swap(nums[b1], nums[e1]);
-                find_b = false;
-                find_e = false;
+            if (i >= j) {
+                break;
             }
+
+            swap(nums[i], nums[j]);
         }
+
+        swap(nums[b], nums[j]);
+
+        // j不再参与接下来的排序
+        quick_sort(nums, b, j);
+        quick_sort(nums, j + 1, e);
     }
 };
 
