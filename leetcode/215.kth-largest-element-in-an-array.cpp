@@ -194,57 +194,152 @@
 // };
 
 // quick sort2
+// class Solution {
+//    public:
+//     int findKthLargest(vector<int>& nums, int k) {
+//         quick_sort(nums, 0, nums.size());
+//         return nums[nums.size() - k];
+//     }
+
+//     // quick sort [b. e)
+//     void quick_sort(vector<int>& nums, int b, int e) {
+//         if (b >= e) {
+//             return;
+//         }
+
+//         // partition [b, e)
+//         // b: pivot
+//         // [b + 1, i): <= pivot
+//         // (j, e): > pivot
+//         int pivot = nums[b];
+//         int i = b + 1;
+//         int j = e - 1;
+//         while (true) {
+//             while (i < e) {
+//                 if (nums[i] > pivot) {
+//                     break;
+//                 }
+//                 i++;
+//             }
+
+//             while (j > b) {
+//                 if (nums[j] <= pivot) {
+//                     break;
+//                 }
+//                 j--;
+//             }
+
+//             if (i >= j) {
+//                 break;
+//             }
+
+//             swap(nums[i], nums[j]);
+//         }
+
+//         swap(nums[b], nums[j]);
+
+//         // j不再参与接下来的排序
+//         quick_sort(nums, b, j);
+//         quick_sort(nums, j + 1, e);
+//     }
+// };
+
+// heap sort1
+// class Solution {
+//    public:
+//     int findKthLargest(vector<int>& nums, int k) {
+//         heap_sort(nums);
+//         return nums[nums.size() - k];
+//     }
+
+//     void sink(vector<int>& nums, int k, int n) {
+//         for (int i = k; 2 * i + 1 < n;) {
+//             int left_child = 2 * i + 1;
+//             int right_child = left_child + 1;
+//             int max = i;
+
+//             if (nums[max] < nums[left_child]) {
+//                 max = left_child;
+//             }
+
+//             if (right_child < n && nums[max] < nums[right_child]) {
+//                 max = right_child;
+//             }
+
+//             if (i != max) {
+//                 swap(nums[i], nums[max]);
+//                 i = max;
+//             } else {
+//                 break;
+//             }
+//         }
+//     }
+
+//     void heap_sort(vector<int>& nums) {
+//         for (int i = int((nums.size() - 2) / 2); i >= 0; i--) {
+//             sink(nums, i, nums.size());
+//         }
+
+//         for (int i = 0; i < nums.size(); i++) {
+//             sink(nums, 0, nums.size() - i);
+//             swap(nums[0], nums[nums.size() - 1 - i]);
+//         }
+//     }
+// };
+
+// heap sort2
 class Solution {
    public:
     int findKthLargest(vector<int>& nums, int k) {
-        quick_sort(nums, 0, nums.size());
+        heap_sort(nums);
         return nums[nums.size() - k];
     }
 
-    // quick sort [b. e)
-    void quick_sort(vector<int>& nums, int b, int e) {
-        if (b >= e) {
-            return;
-        }
-
-        // partition [b, e)
-        // b: pivot
-        // [b + 1, i): <= pivot
-        // (j, e): > pivot
-        int pivot = nums[b];
-        int i = b + 1;
-        int j = e - 1;
-        while (true) {
-            while (i < e) {
-                if (nums[i] > pivot) {
-                    break;
-                }
-                i++;
-            }
-
-            while (j > b) {
-                if (nums[j] <= pivot) {
-                    break;
-                }
-                j--;
-            }
-
-            if (i >= j) {
+    void swim(vector<int>& nums, int k) {
+        for (int i = k; (i - 1) / 2 >= 0;) {
+            int parent = (i - 1) / 2;
+            if (nums[parent] < nums[i]) {
+                swap(nums[parent], nums[i]);
+                i = parent;
+            } else {
                 break;
             }
+        }
+    }
 
-            swap(nums[i], nums[j]);
+    void sink(vector<int>& nums, int k, int n) {
+        for (int i = k; 2 * i + 1 < n;) {
+            int left_child = 2 * i + 1;
+            int right_child = left_child + 1;
+            int max = i;
+
+            if (nums[max] < nums[left_child]) {
+                max = left_child;
+            }
+
+            if (right_child < n && nums[max] < nums[right_child]) {
+                max = right_child;
+            }
+
+            if (i != max) {
+                swap(nums[i], nums[max]);
+                i = max;
+            } else {
+                break;
+            }
+        }
+    }
+
+    void heap_sort(vector<int>& nums) {
+        for (int i = 1; i < nums.size(); i++) {
+            swim(nums, i);
         }
 
-        swap(nums[b], nums[j]);
-
-        // j不再参与接下来的排序
-        quick_sort(nums, b, j);
-        quick_sort(nums, j + 1, e);
+        for (int i = 0; i < nums.size(); i++) {
+            sink(nums, 0, nums.size() - i);
+            swap(nums[0], nums[nums.size() - 1 - i]);
+        }
     }
 };
 
-// for (int i = 0; i < nums.size(); i++) {
-//     printf("%d ", nums[i]);
-// }
 // @lc code=end
